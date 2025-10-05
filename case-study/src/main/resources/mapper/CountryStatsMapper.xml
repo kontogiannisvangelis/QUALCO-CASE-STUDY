@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qualco.casestudy.repository.CountryStatsMapper">
+
+    <select id="getMaxGdpPerCountry" resultType="com.qualco.casestudy.model.CountryStats">
+        SELECT
+            c.name,
+            c.country_code3 AS countryCode3,
+            cs.year,
+            cs.population,
+            MAX(cs.gdp) AS gdp
+        FROM countries c
+        INNER JOIN country_stats cs
+        ON c.country_id = cs.country_id
+        GROUP BY c.country_id
+        ORDER BY c.name;
+    </select>
+
+</mapper>

@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  db:
+    build: ./db
+    container_name: mariadb-nation
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: nation
+      MYSQL_USER: nation_user
+      MYSQL_PASSWORD: nation_user
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - case-study-net
+
+  backend:
+    build: ./case-study
+    container_name: spring-backend
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/nation
+      SPRING_DATASOURCE_USERNAME: nation_user
+      SPRING_DATASOURCE_PASSWORD: nation_user
+    ports:
+      - "8080:8080"
+    networks:
+      - case-study-net
+
+  frontend:
+    build: ./case-study-ui
+    container_name: angular-frontend
+    depends_on:
+      - backend
+    ports:
+      - "4200:80"
+    networks:
+      - case-study-net
+
+volumes:
+  mariadb_data:
+
+networks:
+  case-study-net:
+    driver: bridge

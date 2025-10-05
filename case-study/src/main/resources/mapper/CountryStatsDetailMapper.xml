@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qualco.casestudy.repository.CountryStatsDetailMapper">
+
+    <select id="findStatsByFilters"
+            resultType="com.qualco.casestudy.model.CountryStatsDetail">
+
+        SELECT
+        c.name AS continent,
+        r.name AS region,
+        c2.name AS country,
+        cs.year,
+        cs.population,
+        cs.gdp
+        FROM continents c
+        INNER JOIN regions r ON c.continent_id = r.continent_id
+        INNER JOIN countries c2 ON r.region_id = c2.region_id
+        INNER JOIN country_stats cs ON c2.country_id = cs.country_id
+        WHERE 1=1
+        <if test="regionId != null">
+            AND r.region_id = #{regionId}
+        </if>
+        <if test="fromYear != null">
+            AND cs.year &gt;= #{fromYear}
+        </if>
+        <if test="toYear != null">
+            AND cs.year &lt;= #{toYear}
+        </if>
+        ORDER BY c.name, r.name, c2.name, cs.year;
+
+    </select>
+
+</mapper>

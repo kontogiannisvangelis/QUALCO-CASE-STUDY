@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qualco.casestudy.repository.LanguageMapper">
+
+    <select id="findByCountryId" resultType="com.qualco.casestudy.model.Language" parameterType="int">
+        SELECT l.language as name
+        FROM country_languages cl
+        INNER JOIN languages l ON cl.language_id = l.language_id
+        WHERE cl.country_id = #{countryId}
+        ORDER BY l.language;
+    </select>
+
+</mapper>
